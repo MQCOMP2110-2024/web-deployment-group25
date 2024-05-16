@@ -6,6 +6,7 @@ import './components/ad-widget.js';
 import './components/login-widget.js';
 import './components/task-manager.js';
 
+import './components/task-summary-widget.js';
 import './components/calendar-widget.js';
 import './components/weekly-summary-widget.js';
 import './components/timer-widget.js';

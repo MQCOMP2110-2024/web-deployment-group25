@@ -14,9 +14,10 @@ Rahman: changed Interface design of edit dialog...
 
 Ruby: added scaffolding for the weekly summary widget
 
-James: my task is Weekly Summary Widget.
+James: Weekly Summary Widget is adding now...
 
 Amr: Will do Task Timer Widget
+
 
 TASK DONE BY MOSTAFIZUR RAHMAN (70mrahman/ SID: 46185895):
 ==========================================================

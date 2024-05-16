@@ -36,7 +36,7 @@ class WidgetBlock extends LitElement {
     } else if(this.header === 'Widget 2'){
       content = html`<timer-widget></timer-widget>`;
     } else if(this.header === 'Widget 1'){
-      content = html`<h3>${this.header}</h3>`;
+      content = html`<task-summary-widget></task-summary-widget>`;
     }
     return content;
   }

@@ -3,6 +3,12 @@ import {TaskModel} from '../models.js';
 
 class TimerWidget extends LitElement {
     static styles = css`
+        
+        h2 {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    
         input {
             display: block;
             margin-left: 50px;
@@ -10,6 +16,13 @@ class TimerWidget extends LitElement {
 
         p {
             border: solid 2px black;
+            margin-top: 35px;
+        }
+        
+        .buttons {
+            position: relative;
+            left: 7.5px;
+            margin-left: 5px;
         }
     `;
 
@@ -18,7 +31,8 @@ class TimerWidget extends LitElement {
         mins: {type: Number},
         secs: {type: Number},
         total: {type: Number},
-        currInterval: {type: Text},
+        interval: {type: Object},
+        paused: {type: Boolean},
     }
     
     constructor() {
@@ -26,48 +40,90 @@ class TimerWidget extends LitElement {
         this.hrs = 0;
         this.mins = 0;
         this.secs = 0;
+        this.paused = false;
     }
-
+    
     timer(){
         var that = this;
-        clearInterval(this.interval);
-        var interval = setInterval(function() {
-                that.hrs = Math.floor(that.total/3600);
-                that.mins = Math.floor((that.total%3600)/60);
-                that.secs = Math.floor((that.total - that.hrs*3600 - that.mins*60));
-                
-                if(that.mins < 10){that.mins = "0" + that.mins};
-                if(that.secs < 10){that.secs = "0" + that.secs};
-                
-                that.total = that.total - 1;
-
-                if(that.total < 0){
-                    clearInterval(interval);
-                }
+        console.log("Timer");
+        clearInterval(this.currInterval);
+        this.currInterval = setInterval(function() {
+            that.hrs = Math.floor(that.total/3600);
+            console.log(that.hrs);
+            that.mins = Math.floor((that.total%3600)/60);
+            that.secs = Math.floor((that.total - that.hrs*3600 - that.mins*60));
+            
+            that.total = that.total - 1;
+            
+            if(that.total < 0){
+                clearInterval(that.currInterval);
+            }
         }, 1000);
-        this.currInterval = interval;
     }
-
-
-    startTimer(event) {
-        event.preventDefault();
-        this.hrs = event.target.hrs.value;
-        this.mins = event.target.mins.value;
-        this.total = this.hrs*3600 + this.mins*60;
-
+    
+    startTimer(e){
+        e.preventDefault();
+        this.total = 0;
+        this.total = this.hrs*3600 + this.mins*60 + this.secs;
+        this.circleTotal = this.total * 1000;
+        this.hrs = 0;
+        this.mins = 0;
         this.timer();
     }
     
-    render() {
+    pauseTimer(e){
+        e.preventDefault();
+        this.paused = true;
+        clearInterval(this.currInterval);
+    }
     
-    return html`
-        <h3>Timer</h3>
-        <form id="input-form" @submit=${this.startTimer}>
-            <input type="text" placeholder="Hours" name="hrs">
-            <input type="text" placeholder="Minutes" name="mins">
-            <input type="submit" value="Start">
-            <p>${this.hrs}:${this.mins}:${this.secs}</p>
-        </form>
+    resetTimer(e){
+        e.preventDefault();
+        this.hrs = 0;
+        this.mins = 0;
+        this.secs = 0;
+        clearInterval(this.currInterval);
+    }
+    
+    header(){
+        return html`
+            <h2>Timer</h2>
+        `;
+    }
+    
+    input(){
+        return html`
+            <form>
+                <input text="text" placeholder="Hours" @change=${this.updateH}>
+                <input type="text" placeholder="Minutes" @change=${this.updateM}>
+                <button class="buttons" @click=${this.startTimer}>Start</button>
+                <button class="buttons" @click=${this.resetTimer}>Reset</button>
+                <button  class="buttons" @click=${this.pauseTimer}>Pause</button>
+            </form>
+        `;
+    }
+    
+    updateH(e){
+        this.hrs = e.srcElement.value;
+        console.log(this.hrs)
+    }
+    
+    updateM(e){
+        this.mins = e.srcElement.value;
+        console.log(this.mins)
+    }
+    
+    timerDisplay(){
+        return html`
+            <p>${this.hrs}h, ${this.mins}m, ${this.secs}s</p>
+        `;
+    }
+    
+    render() {
+        return html`
+        ${this.header()}
+        ${this.input()}
+        ${this.timerDisplay()}
         `;
     }
 
